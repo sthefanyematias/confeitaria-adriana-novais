@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { Home } from './pages/home/home';
@@ -30,7 +29,9 @@ export const routes: Routes = [
     { path: 'admin/produtos/editar/:id', component: EditarProduto, canActivate: [authGuard], title: 'Admin – Editar Produto' },
     { path: 'admin/pedidos', component: Pedidos, canActivate: [authGuard], title: 'Admin – Pedidos' },
     { path: 'admin/categorias', component: ListarCategorias, canActivate: [authGuard], title: 'Admin – Categorias' },
-    { path: 'login', redirectTo: 'admin/login', pathMatch: 'full' },   
-    { path: 'admin', redirectTo: 'admin/login', pathMatch: 'full' },   
+    // { path: 'login', redirectTo: 'admin/login', pathMatch: 'full' },   
+    // { path: 'admin', redirectTo: 'admin/login', pathMatch: 'full' },   
+    { path: 'login', redirectTo: '/admin/login', pathMatch: 'full' },   
+    { path: 'admin', redirectTo: '/admin/login', pathMatch: 'full' },   
     { path: '**', redirectTo: 'home' }
 ];
