@@ -260,6 +260,17 @@ As rotas de redirecionamento `login` e `admin` foram corrigidas para utilizar ca
 
 <br>
 
+## Credenciais de Acesso Administrativo
+
+Para fins de validação e homologação do painel de controle, a base de dados é inicializada automaticamente por meio do seeder com as seguintes credenciais padrão de administrador:
+
+| Campo | Valor |
+|---------|---------|
+| E-mail | `adriana@novais.com` |
+| Senha | `1234` |
+
+<br>
+
 ## Licença
 
 Este projeto é de uso privado. Todos os direitos reservados à Adriana Novais Confeitaria.
