@@ -1,0 +1,145 @@
+<main class="detalhe-page">
+    <div class="container">
+
+        <div class="breadcrumb">
+            <a routerLink="/home">Início</a>
+            <span>/</span>
+            <a routerLink="/produtos">Produtos</a>
+            @if (produto) {
+            <span>/</span>
+            <span>{{ produto.nome }}</span>
+            }
+        </div>
+
+        @if (carregando) {
+        <div class="detalhe-skeleton">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-info">
+                <div class="skeleton-linha" style="width: 40%; height: 20px;"></div>
+                <div class="skeleton-linha" style="width: 80%; height: 36px;"></div>
+                <div class="skeleton-linha" style="width: 60%; height: 24px;"></div>
+                <div class="skeleton-linha" style="height: 80px;"></div>
+            </div>
+        </div>
+        } @else if (produto) {
+        <div class="detalhe-inner">
+
+            <div class="detalhe-imagem-wrap">
+                <img [src]="imagemUrl" [alt]="produto.nome" class="detalhe-imagem">
+                @if (produto.destaque) {
+                <span class="tag-destaque">Destaque</span>
+                }
+                @if (semEstoque) {
+                <div class="indisponivel-overlay">
+                    <span>Indisponível</span>
+                </div>
+                }
+            </div>
+
+            <div class="detalhe-info">
+
+                @if (produto.categoria) {
+                <span class="tag-rosa">{{ produto.categoria.nome }}</span>
+                }
+
+                <h1 class="detalhe-nome">{{ produto.nome }}</h1>
+
+                <p class="detalhe-preco">{{ formatarPreco(produto.preco) }}</p>
+
+                @if (produto.descricao) {
+                <div class="detalhe-descricao-wrap">
+                    <h3 class="detalhe-descricao-titulo">Descrição</h3>
+                    <p class="detalhe-descricao">{{ produto.descricao }}</p>
+                </div>
+                }
+
+                <div class="detalhe-estoque" [class.sem-estoque]="semEstoque">
+                    @if (!semEstoque) {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {{ produto.estoque }} unidade(s) disponível(is)
+                    } @else {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                    Indisponível no momento
+                    }
+                </div>
+
+                @if (!semEstoque) {
+                <div class="detalhe-acoes">
+                    <label class="qtd-label">Quantidade</label>
+                    <div class="qtd-controle">
+                        <button class="btn-qtd" (click)="decrementar()" (keydown.enter)="decrementar()"
+                            [disabled]="quantidade <= 1" aria-label="Diminuir">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                        <input type="number" class="qtd-input" [value]="quantidade"
+                            (change)="aoAlterarQuantidade($event)" min="1" [max]="produto.estoque"
+                            aria-label="Quantidade">
+                        <button class="btn-qtd" (click)="incrementar()" (keydown.enter)="incrementar()"
+                            [disabled]="quantidade >= produto.estoque" aria-label="Aumentar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <button class="btn-adicionar-detalhe" [class.adicionado]="adicionado"
+                        (click)="adicionarAoCarrinho()" (keydown.enter)="adicionarAoCarrinho()">
+                        @if (adicionado) {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Adicionado ao carrinho
+                        } @else {
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                        Adicionar ao carrinho
+                        }
+                    </button>
+
+                    <a routerLink="/carrinho" class="btn-secundario btn-ir-carrinho">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                        Ver carrinho
+                    </a>
+                </div>
+                }
+
+                <button class="btn-voltar" (click)="voltar()" (keydown.enter)="voltar()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Voltar
+                </button>
+            </div>
+
+        </div>
+        } @else {
+        <div class="detalhe-nao-encontrado">
+            <p>Produto não encontrado.</p>
+            <a routerLink="/produtos" class="btn-primario">Ver todos os produtos</a>
+        </div>
+        }
+    </div>
+</main>

@@ -1,0 +1,132 @@
+<app-admin-layout>
+    <div class="listar-content">
+
+        <div class="page-toolbar">
+            <h2 class="page-titulo">Categorias</h2>
+        </div>
+
+        <div class="admin-card form-nova-categoria">
+            <h3 class="card-titulo">Nova Categoria</h3>
+            <div class="form-row">
+                <div class="form-grupo">
+                    <label class="form-label">Nome <span class="obrigatorio">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="novoNome" placeholder="Ex: Bolos"
+                        (keydown.enter)="adicionar()">
+                </div>
+                <div class="form-grupo">
+                    <label class="form-label">Descrição</label>
+                    <input type="text" class="form-input" [(ngModel)]="novaDescricao" placeholder="Descrição (opcional)"
+                        (keydown.enter)="adicionar()">
+                </div>
+                <button class="btn-admin-primario btn-adicionar-cat" (click)="adicionar()" (keydown.enter)="adicionar()"
+                    [disabled]="adicionando">
+                    @if (adicionando) {
+                    <span class="spinner-btn-sm"></span>
+                    } @else {
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    }
+                    Adicionar
+                </button>
+            </div>
+        </div>
+
+        @if (carregando) {
+        <div class="skeleton-tabela">
+            @for (i of [1,2,3,4]; track i) {
+            <div class="skeleton-row"></div>
+            }
+        </div>
+        } @else if (categorias.length === 0) {
+        <div class="estado-vazio admin-card">
+            <p>Nenhuma categoria cadastrada.</p>
+        </div>
+        } @else {
+        <div class="tabela-wrap">
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>nome</th>
+                        <th>descrição</th>
+                        <th>status</th>
+                        <th>ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (cat of categorias; track cat.id) {
+                    <tr>
+                        <td class="td-id">{{ cat.id }}</td>
+
+                        @if (editandoId === cat.id) {
+                        <td colspan="2">
+                            <div class="edicao-inline">
+                                <input type="text" class="form-input input-inline" [(ngModel)]="nomeEdicao"
+                                    placeholder="Nome" (keydown.enter)="salvarEdicao(cat)">
+                                <input type="text" class="form-input input-inline" [(ngModel)]="descricaoEdicao"
+                                    placeholder="Descrição" (keydown.enter)="salvarEdicao(cat)">
+                            </div>
+                        </td>
+                        } @else {
+                        <td class="td-nome-bold">{{ cat.nome }}</td>
+                        <td>{{ cat.descricao || '—' }}</td>
+                        }
+
+                        <td>
+                            <span class="badge" [class.badge-ativo]="cat.ativo" [class.badge-inativo]="!cat.ativo">
+                                {{ cat.ativo ? 'ativa' : 'inativa' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            @if (editandoId === cat.id) {
+                            <div class="acoes">
+                                <button class="btn-acao salvar" (click)="salvarEdicao(cat)"
+                                    (keydown.enter)="salvarEdicao(cat)" title="Salvar">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </button>
+                                <button class="btn-acao cancelar" (click)="cancelarEdicao()"
+                                    (keydown.enter)="cancelarEdicao()" title="Cancelar">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                </button>
+                            </div>
+                            } @else {
+                            <div class="acoes">
+                                <button class="btn-acao editar" (click)="iniciarEdicao(cat)"
+                                    (keydown.enter)="iniciarEdicao(cat)" title="Editar">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                    </svg>
+                                </button>
+                                <button class="btn-acao excluir" (click)="excluir(cat)" (keydown.enter)="excluir(cat)"
+                                    title="Excluir">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                    </svg>
+                                </button>
+                            </div>
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</app-admin-layout>

@@ -1,0 +1,192 @@
+<app-admin-layout>
+    <div class="home-content">
+        <div class="home-topo">
+
+            <div class="admin-card acesso-rapido">
+                <h3 class="card-titulo">Acesso Rápido</h3>
+                <div class="acoes-rapidas">
+
+                    <a routerLink="/admin/produtos/cadastrar" class="btn-rapido btn-rapido-primario">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        Novo Doce
+                    </a>
+
+                    <a routerLink="/admin/categorias" class="btn-rapido btn-rapido-secundario">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        Nova Categoria
+                    </a>
+
+                    <a routerLink="/admin/pedidos" class="btn-rapido btn-rapido-ghost">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                        Gerenciar Encomendas
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="admin-card card-produtos">
+                <div class="card-cabecalho">
+                    <h3 class="card-titulo">Produtos</h3>
+                    <a routerLink="/admin/produtos" class="link-ver-todos">Ver todos</a>
+                </div>
+
+                @if (carregando) {
+                <div class="loading-mini">
+                    @for (i of [1,2,3]; track i) {
+                    <div class="skeleton-row-mini"></div>
+                    }
+                </div>
+                } @else if (produtos.length === 0) {
+                <p class="vazio-texto">Nenhum produto cadastrado.</p>
+                } @else {
+                <table class="mini-tabela">
+                    <thead>
+                        <tr>
+                            <th>nome</th>
+                            <th>preço</th>
+                            <th>status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (p of produtos; track p.id) {
+                        <tr>
+                            <td class="td-nome">{{ p.nome }}</td>
+                            <td>{{ p.preco | currency:'BRL' }}</td>
+                            <td>
+                                <span class="badge" [class.badge-ativo]="p.ativo" [class.badge-inativo]="!p.ativo">
+                                    {{ p.ativo ? 'ativo' : 'inativo' }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                }
+            </div>
+
+        </div>
+
+        <div class="resumo-cards">
+
+            <div class="resumo-card">
+                <div class="resumo-icone">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="resumo-valor">{{ totalProdutos }}</p>
+                    <p class="resumo-label">Produtos cadastrados</p>
+                </div>
+            </div>
+
+            <div class="resumo-card">
+                <div class="resumo-icone">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="resumo-valor">{{ produtosAtivos }}</p>
+                    <p class="resumo-label">Produtos ativos</p>
+                </div>
+            </div>
+
+            <div class="resumo-card">
+                <div class="resumo-icone">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="resumo-valor">{{ produtosDestaque }}</p>
+                    <p class="resumo-label">Em destaque</p>
+                </div>
+            </div>
+
+            <div class="resumo-card">
+                <div class="resumo-icone resumo-alerta">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" />
+                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                        <line x1="12" y1="12" x2="12" y2="16" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="resumo-valor">{{ totalEstoque }}</p>
+                    <p class="resumo-label">Total em estoque</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card card-pedidos">
+            <div class="card-cabecalho">
+                <h3 class="card-titulo">Gerenciamento de Pedidos</h3>
+                <a routerLink="/admin/pedidos" class="link-ver-todos">Ver todos</a>
+            </div>
+
+            @if (carregandoPedidos) {
+            <div class="loading-mini">
+                @for (i of [1,2,3]; track i) {
+                <div class="skeleton-row-mini"></div>
+                }
+            </div>
+            } @else if (pedidos.length === 0) {
+            <p class="vazio-texto">Nenhum pedido registrado ainda.</p>
+            } @else {
+            <div class="tabela-wrap">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (pedido of pedidos; track pedido.id) {
+                        <tr>
+                            <td class="td-id">#{{ pedido.id }}</td>
+                            <td class="td-nome-bold">{{ nomeCliente(pedido) }}</td>
+                            <td>{{ formatarData(pedido.data_pedido) }}</td>
+                            <td><strong>{{ formatarPreco(pedido.valor_total) }}</strong></td>
+                            <td>{{ pagamentoLabel(pedido.forma_pagamento) }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="badgeStatus(pedido.status)">
+                                    {{ statusLabel(pedido.status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+        </div>
+
+    </div>
+</app-admin-layout>

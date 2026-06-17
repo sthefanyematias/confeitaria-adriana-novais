@@ -1,0 +1,62 @@
+@if (config) {
+<div class="modal-backdrop" (click)="aoClicarBackdrop($event)" role="dialog" aria-modal="true"
+    [attr.aria-labelledby]="'modal-titulo'">
+    <div class="modal-caixa" [class]="'modal-' + config.tipo">
+
+        <div class="modal-icone" [class]="iconeClasse">
+            @switch (config.tipo) {
+            @case ('sucesso') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+            }
+            @case ('erro') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            }
+            @case ('aviso') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            }
+            @case ('confirmacao') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            }
+            }
+        </div>
+
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo" id="modal-titulo">{{ config.titulo }}</h3>
+            <p class="modal-mensagem">{{ config.mensagem }}</p>
+        </div>
+
+        <div class="modal-acoes">
+            @if (config.tipo === 'confirmacao') {
+            <button class="btn-secundario" (click)="cancelar()" (keydown.enter)="cancelar()">
+                {{ config.textoBotaoCancelar || 'Cancelar' }}
+            </button>
+            <button class="btn-primario" (click)="confirmar()" (keydown.enter)="confirmar()">
+                {{ config.textoBotaoConfirmar || 'Confirmar' }}
+            </button>
+            } @else {
+            <button class="btn-primario" (click)="confirmar()" (keydown.enter)="confirmar()">
+                {{ config.textoBotaoConfirmar || 'OK' }}
+            </button>
+            }
+        </div>
+
+    </div>
+</div>
+}

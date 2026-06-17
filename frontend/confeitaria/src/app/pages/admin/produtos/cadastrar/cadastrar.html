@@ -1,0 +1,163 @@
+<app-admin-layout>
+    <div class="form-content">
+
+        <div class="page-header">
+            <a routerLink="/admin/produtos" class="btn-voltar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Voltar
+            </a>
+            <h2 class="page-titulo">Cadastrar Produto</h2>
+        </div>
+
+        <div class="admin-card">
+            <form [formGroup]="form" (ngSubmit)="salvar()" class="form-admin">
+
+                <div class="form-row">
+                    <div class="form-grupo">
+                        <label class="form-label">Nome <span class="obrigatorio">*</span></label>
+                        <input type="text" formControlName="nome" class="form-input" [class.invalido]="invalido('nome')"
+                            placeholder="Ex: Bolo de Chocolate">
+                        @if (invalido('nome')) {
+                        <span class="form-erro">Nome é obrigatório</span>
+                        }
+                    </div>
+
+                    <div class="form-grupo">
+                        <label class="form-label">Categoria <span class="obrigatorio">*</span></label>
+                        <select formControlName="categoria_id" class="form-select"
+                            [class.invalido]="invalido('categoria_id')">
+                            <option value="">Selecione uma categoria</option>
+                            @for (cat of categorias; track cat.id) {
+                            <option [value]="cat.id">{{ cat.nome }}</option>
+                            }
+                        </select>
+                        @if (invalido('categoria_id')) {
+                        <span class="form-erro">Selecione uma categoria</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-grupo">
+                    <label class="form-label">Descrição</label>
+                    <textarea formControlName="descricao" class="form-textarea" rows="3"
+                        placeholder="Descrição do produto (opcional)"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-grupo">
+                        <label class="form-label">Preço (R$) <span class="obrigatorio">*</span></label>
+                        <input type="number" formControlName="preco" class="form-input"
+                            [class.invalido]="invalido('preco')" placeholder="0.00" step="0.01" min="0">
+                        @if (invalido('preco')) {
+                        <span class="form-erro">Preço inválido</span>
+                        }
+                    </div>
+
+                    <div class="form-grupo">
+                        <label class="form-label">Estoque <span class="obrigatorio">*</span></label>
+                        <input type="number" formControlName="estoque" class="form-input"
+                            [class.invalido]="invalido('estoque')" placeholder="0" min="0">
+                        @if (invalido('estoque')) {
+                        <span class="form-erro">Estoque inválido</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-grupo">
+                        <label class="form-label">Tipo de unidade</label>
+                        <select formControlName="unidade_tipo" class="form-select">
+                            <option value="">Não informar</option>
+                            <option value="unidade">Unidade(s)</option>
+                            <option value="kg">Quilograma (kg)</option>
+                            <option value="g">Grama (g)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label class="form-label">Quantidade por unidade</label>
+                        <input type="number" formControlName="unidade_quantidade" class="form-input"
+                            placeholder="Ex: 20, 500, 1" min="1" [disabled]="!form.get('unidade_tipo')?.value">
+                        <span class="form-dica">
+                            @if (form.get('unidade_tipo')?.value === 'unidade') {
+                            Exibe: R$ {{ form.get('preco')?.value || '0.00' }} / {{
+                            form.get('unidade_quantidade')?.value || '1' }} unidade(s)
+                            } @else if (form.get('unidade_tipo')?.value === 'kg') {
+                            Exibe: R$ {{ form.get('preco')?.value || '0.00' }} / {{
+                            form.get('unidade_quantidade')?.value || '1' }} kg
+                            } @else if (form.get('unidade_tipo')?.value === 'g') {
+                            Exibe: R$ {{ form.get('preco')?.value || '0.00' }} / {{
+                            form.get('unidade_quantidade')?.value || '1' }}g
+                            } @else {
+                            Selecione o tipo para ver o preview
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-grupo">
+                    <label class="form-label">Imagem do produto</label>
+                    <div class="upload-area" (click)="inputImagem.click()" (keydown.enter)="inputImagem.click()"
+                        tabindex="0" role="button" aria-label="Selecionar imagem">
+                        @if (previewUrl) {
+                        <img [src]="previewUrl" alt="Preview" class="preview-imagem">
+                        <span class="preview-hint">Clique para trocar</span>
+                        } @else {
+                        <div class="upload-placeholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--rosa-claro)"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                            <p>Clique para selecionar uma imagem</p>
+                            <span>JPEG, PNG, WEBP — máx. 5 MB</span>
+                        </div>
+                        }
+                    </div>
+                    <input #inputImagem type="file" accept="image/jpeg,image/png,image/webp"
+                        (change)="aoSelecionarImagem($event)" style="display: none">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-grupo">
+                        <label class="form-label">Destaque</label>
+                        <div class="toggle-grupo">
+                            <input type="checkbox" id="destaque" formControlName="destaque" class="toggle">
+                            <label for="destaque" class="toggle-label">Exibir como destaque no site</label>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label class="form-label">Status</label>
+                        <div class="toggle-grupo">
+                            <input type="checkbox" id="ativo" formControlName="ativo" class="toggle">
+                            <label for="ativo" class="toggle-label">Produto ativo (visível na loja)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-acoes">
+                    <button type="submit" class="btn-admin-primario" [disabled]="enviando">
+                        @if (enviando) {
+                        <span class="spinner-btn-sm"></span>
+                        Salvando...
+                        } @else {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Salvar produto
+                        }
+                    </button>
+                    <a routerLink="/admin/produtos" class="btn-admin-secundario">Cancelar</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</app-admin-layout>

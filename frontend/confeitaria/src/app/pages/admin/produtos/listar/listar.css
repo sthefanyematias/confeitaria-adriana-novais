@@ -1,0 +1,47 @@
+.listar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.td-id {
+    color: #ccc;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.td-nome-bold {
+    font-weight: 600;
+    color: #1e1e1e;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-categoria {
+    display: inline-block;
+    background: #f4f4f4;
+    color: #666;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 0.74rem;
+    font-weight: 500;
+    border: 1px solid #ececec;
+}
+
+.td-preco {
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.td-estoque {
+    font-weight: 500;
+    color: #555;
+}
+
+.td-sem-estoque {
+    color: #b02a37 !important;
+    font-weight: 700;
+}

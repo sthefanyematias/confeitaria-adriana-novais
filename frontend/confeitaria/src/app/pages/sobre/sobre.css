@@ -1,0 +1,261 @@
+.sobre-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.sobre-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 72px;
+    overflow: hidden;
+}
+
+.sobre-hero-fundo {
+    position: absolute;
+    inset: 0;
+}
+
+.sobre-hero-fundo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.sobre-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom, 
+        rgba(139, 74, 78, 0.85) 0%,     
+        rgba(231, 159, 164, 0.7) 50%,    
+        rgba(255, 251, 243, 0.95) 100%   
+    );
+    z-index: 1;
+}
+
+.sobre-hero-conteudo {
+    position: relative;
+    z-index: 1;
+    padding-top: 1px;
+}
+
+.sobre-hero-titulo {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    color: var(--branco);
+    margin: 12px 0 8px;
+    line-height: 1.2;
+}
+
+.sobre-hero-sub {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    max-width: 480px;
+}
+
+.sobre-historia {
+    padding: 80px 0;
+    background: var(--creme);
+}
+
+.sobre-historia-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 72px;
+    align-items: center;
+}
+
+.sobre-foto {
+    position: relative;
+}
+
+.foto-frame {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+}
+
+.foto-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-detalhe {
+    position: absolute;
+    bottom: -16px;
+    right: -16px;
+    width: 40%;
+    height: 40%;
+    border-radius: var(--radius);
+    background: var(--rosa-muito-claro);
+    z-index: -1;
+    border: 3px solid var(--rosa-claro);
+}
+
+.sobre-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sobre-secao-titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--preto);
+    line-height: 1.2;
+    margin-top: 8px;
+}
+
+.sobre-bio {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sobre-bio p {
+    font-size: 0.95rem;
+    color: var(--cinza);
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.sobre-contato {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    justify-content: center;
+}
+
+.divisor-onda {
+    line-height: 0;
+    overflow: hidden;
+    background: var(--creme);
+}
+
+.divisor-onda svg {
+    display: block;
+    width: 100%;
+    height: 80px;
+}
+
+.divisor-volta {
+    background: var(--rosa-muito-claro);
+}
+
+.sobre-valores {
+    padding: 80px 0;
+    background: var(--rosa-muito-claro);
+}
+
+.valores-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 48px;
+}
+
+.valor-card {
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.valor-card:hover {
+    transform: translateY(-4px);
+}
+
+.valor-icone {
+    font-size: 1.5rem;
+    color: var(--rosa);
+}
+
+.valor-titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--preto);
+}
+
+.valor-descricao {
+    font-size: 0.875rem;
+    color: var(--cinza);
+    line-height: 1.7;
+}
+
+.sobre-galeria {
+    padding: 80px 0;
+    background: var(--creme);
+}
+
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.galeria-item {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: var(--rosa-muito-claro);
+}
+
+.galeria-item.galeria-grande {
+    grid-row: 1 / 3;
+    aspect-ratio: auto;
+}
+
+.galeria-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+}
+
+.galeria-item:hover img {
+    transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+    .sobre-historia-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .sobre-foto {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .valores-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .galeria-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .galeria-item.galeria-grande {
+        grid-row: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+@media (max-width: 576px) {
+    .valores-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .galeria-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

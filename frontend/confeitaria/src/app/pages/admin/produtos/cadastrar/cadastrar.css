@@ -1,0 +1,122 @@
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 740px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: #fff;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 12px;
+    color: #666;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-voltar:hover {
+    border-color: var(--rosa, #E79FA4);
+    color: var(--rosa, #E79FA4);
+    background: var(--rosa-muito-claro, #FAE9EB);
+}
+
+.page-titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e1e1e;
+    font-family: 'Poppins', sans-serif;
+}
+
+.upload-area {
+    border: 2px dashed var(--rosa-claro, #F3CFD2);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fdf8f9;
+    position: relative;
+    overflow: hidden;
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-area:hover,
+.upload-area:focus {
+    border-color: var(--rosa, #E79FA4);
+    background: var(--rosa-muito-claro, #FAE9EB);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(231, 159, 164, 0.12);
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #bbb;
+}
+
+.upload-placeholder p {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #888;
+    margin: 0;
+}
+
+.upload-placeholder span {
+    font-size: 0.75rem;
+    color: #bbb;
+}
+
+.preview-imagem {
+    max-height: 190px;
+    max-width: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.preview-hint {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-size: 0.72rem;
+    color: #888;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 3px 10px;
+    border-radius: 99px;
+    backdrop-filter: blur(4px);
+}
+
+.spinner-btn-sm {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}

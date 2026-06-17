@@ -1,0 +1,78 @@
+<article class="card" [class.sem-estoque]="semEstoque">
+
+    <a [routerLink]="['/produto', produto.id]" class="card-imagem-link" tabindex="-1" aria-hidden="true">
+        <div class="card-imagem">
+            <img [src]="imagemUrl" [alt]="produto.nome" loading="lazy">
+            @if (produto.destaque && !semEstoque) {
+            <span class="tag-destaque">Destaque</span>
+            }
+            @if (semEstoque) {
+            <div class="indisponivel-overlay">
+                <span>Indisponivel</span>
+            </div>
+            }
+        </div>
+    </a>
+
+    <div class="card-corpo">
+        @if (produto.categoria) {
+        <span class="tag-rosa">{{ produto.categoria.nome }}</span>
+        }
+
+        <a [routerLink]="['/produto', produto.id]" class="card-nome">
+            {{ produto.nome }}
+        </a>
+
+        <div class="card-preco-wrap">
+            <p class="card-preco">{{ formatarPreco(produto.preco) }}</p>
+            @if (labelUnidade) {
+            <span class="card-unidade">/ {{ labelUnidade }}</span>
+            }
+        </div>
+
+        <div class="card-acoes">
+            @if (!semEstoque) {
+            <div class="qtd-controle">
+                <button class="btn-qtd" (click)="diminuir()" [disabled]="quantidade <= 1"
+                    aria-label="Diminuir quantidade">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
+                <input type="number" class="qtd-input" [value]="quantidade" (change)="aoAlterarQuantidade($event)"
+                    min="1" [max]="produto.estoque" aria-label="Quantidade">
+                <button class="btn-qtd" (click)="aumentar()" [disabled]="quantidade >= produto.estoque"
+                    aria-label="Aumentar quantidade">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
+            </div>
+
+            <button class="btn-adicionar" [class.adicionado]="adicionado" (click)="adicionar()"
+                [attr.aria-label]="adicionado ? 'Item adicionado ao carrinho' : 'Adicionar ao carrinho'">
+                @if (adicionado) {
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Adicionado
+                } @else {
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                Adicionar
+                }
+            </button>
+            } @else {
+            <button class="btn-indisponivel" disabled>Indisponível</button>
+            }
+        </div>
+    </div>
+</article>

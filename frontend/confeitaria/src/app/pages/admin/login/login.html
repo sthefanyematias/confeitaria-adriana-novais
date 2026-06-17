@@ -1,0 +1,79 @@
+<main class="login-page">
+    <div class="login-card">
+
+        <div class="login-form-area">
+            <h2 class="login-titulo">Área Administrativa</h2>
+            <p class="login-subtitulo">Acesse o painel de controle</p>
+
+            <form [formGroup]="form" (ngSubmit)="entrar()" class="form-login">
+
+                <div class="campo">
+                    <label for="email" class="campo-label">E-mail</label>
+                    <input id="email" type="email" formControlName="email" class="campo-input"
+                        [class.invalido]="campoInvalido('email')" placeholder="seu@email.com" autocomplete="email">
+                    @if (campoInvalido('email')) {
+                    <span class="campo-erro">Insira um e-mail válido</span>
+                    }
+                </div>
+
+                <div class="campo">
+                    <label for="senha" class="campo-label">Senha</label>
+                    <div class="campo-input-wrap">
+                        <input id="senha" [type]="mostrarSenha ? 'text' : 'password'" formControlName="senha"
+                            class="campo-input" [class.invalido]="campoInvalido('senha')" placeholder="••••••••"
+                            autocomplete="current-password">
+                        <button type="button" class="btn-ver-senha" (click)="mostrarSenha = !mostrarSenha"
+                            tabindex="-1">
+                            @if (mostrarSenha) {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                            } @else {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            }
+                        </button>
+                    </div>
+                    @if (campoInvalido('senha')) {
+                    <span class="campo-erro">Senha é obrigatória</span>
+                    }
+                </div>
+
+                @if (erroLogin) {
+                <div class="alerta-erro">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    {{ erroLogin }}
+                </div>
+                }
+
+                <button type="submit" class="btn-entrar" [disabled]="carregando">
+                    @if (carregando) {
+                    <span class="spinner-btn"></span>
+                    Verificando...
+                    } @else {
+                    Acessar conta
+                    }
+                </button>
+
+            </form>
+        </div>
+
+        <div class="login-logo-area">
+            <div class="logo-circulo">
+                <img src="/images/logo.png" alt="Confeitaria Adriana Novais">
+            </div>
+            <p class="logo-subtexto">Área Administrativa</p>
+        </div>
+    </div>
+</main>

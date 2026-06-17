@@ -1,0 +1,100 @@
+.listar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-nova-categoria {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #f0f0f0;
+}
+
+.card-titulo {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: #bbb;
+    margin-bottom: 16px;
+}
+
+.form-nova-categoria .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 14px;
+    align-items: end;
+}
+
+@media (max-width: 700px) {
+    .form-nova-categoria .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-adicionar-cat {
+    white-space: nowrap;
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.td-id {
+    color: #ccc;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.td-nome-bold {
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.edicao-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input-inline {
+    flex: 1;
+    min-width: 100px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--rosa-claro, #F3CFD2);
+    border-radius: 10px;
+    font-size: 0.83rem;
+    font-family: 'Poppins', sans-serif;
+    background: var(--rosa-muito-claro, #FAE9EB);
+    outline: none;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.input-inline:focus {
+    border-color: var(--rosa, #E79FA4);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(231, 159, 164, 0.12);
+}
+
+.spinner-btn-sm {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}

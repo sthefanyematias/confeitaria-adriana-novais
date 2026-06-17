@@ -1,0 +1,101 @@
+<app-admin-layout>
+    <div class="listar-content">
+
+        <div class="page-toolbar">
+            <div class="campo-busca">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input class="input-busca" type="text" placeholder="Busca" [(ngModel)]="busca"
+                    (ngModelChange)="filtrar()" />
+            </div>
+            <a routerLink="/admin/produtos/cadastrar" class="btn-adicionar">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Adicionar Doce
+            </a>
+        </div>
+
+        @if (carregando) {
+        <div class="skeleton-tabela">
+            @for (i of [1,2,3,4,5]; track i) {
+            <div class="skeleton-row"></div>
+            }
+        </div>
+        } @else if (exibidos.length === 0) {
+        <div class="tabela-wrap">
+            <div class="estado-vazio">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--rosa-claro)"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                <p>{{ busca ? 'Nenhum produto encontrado para "' + busca + '"' : 'Nenhum produto cadastrado ainda.' }}
+                </p>
+            </div>
+        </div>
+        } @else {
+        <div class="tabela-wrap">
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>imagem</th>
+                        <th>nome</th>
+                        <th>categoria</th>
+                        <th>preço</th>
+                        <th>estoque</th>
+                        <th>status</th>
+                        <th>ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (p of exibidos; track p.id) {
+                    <tr>
+                        <td class="td-id">{{ p.id }}</td>
+                        <td>
+                            <img [src]="apiConfig.getUrlImagemProduto(p.imagem_url ?? '')" [alt]="p.nome" class="produto-thumb">
+                        </td>
+                        <td class="td-nome-bold">{{ p.nome }}</td>
+                        <td>{{ p.categoria?.nome || '—' }}</td>
+                        <td>{{ p.preco | currency:'BRL' }}</td>
+                        <td [class.td-sem-estoque]="p.estoque === 0">{{ p.estoque }}</td>
+                        <td>
+                            <span class="badge" [class.badge-ativo]="p.ativo" [class.badge-inativo]="!p.ativo">
+                                {{ p.ativo ? 'ativo' : 'inativo' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="acoes">
+                                <button class="btn-acao editar" [routerLink]="['/admin/produtos/editar', p.id]"
+                                    title="Editar produto">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                    </svg>
+                                </button>
+                                <button class="btn-acao excluir" (click)="excluir(p)" title="Excluir produto">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</app-admin-layout>

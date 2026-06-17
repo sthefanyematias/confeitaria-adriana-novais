@@ -1,0 +1,128 @@
+<main class="home">
+
+    <section class="hero">
+        <div class="hero-fundo">
+            <img src="/images/banner.png" alt="Confeitaria Adriana Novais" class="hero-img">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-scroll" (click)="scrollParaVideos()" role="button" aria-label="Rolar para baixo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+            </svg>
+        </div>
+    </section>
+
+    <section id="videos" class="videos-section">
+        <div class="container">
+            <div class="secao-cabecalho">
+                <span class="tag-rosa">Nosso trabalho</span>
+                <h2 class="secao-titulo">Um gostinho do que fazemos</h2>
+                <p class="secao-subtitulo">Cada detalhe preparado com tecnica e muito carinho</p>
+            </div>
+
+            @defer (on viewport) {
+            <div class="videos-grid">
+                @for (video of videos; track video.src) {
+                <div class="video-card">
+                    <video [src]="video.src" muted loop autoplay playsinline preload="none"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                    </video>
+                </div>
+                }
+            </div>
+            } @placeholder {
+            <div class="videos-grid">
+                @for (video of videos; track video.src) {
+                <div class="video-card"></div>
+                }
+            </div>
+            }
+        </div>
+    </section>
+
+    <div class="divisor-onda">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#FAE9EB" />
+        </svg>
+    </div>
+
+    <section class="categorias-section">
+        <div class="container">
+            <div class="secao-cabecalho">
+                <span class="tag-rosa">Cardapio</span>
+                <h2 class="secao-titulo">O que voce deseja hoje?</h2>
+                <p class="secao-subtitulo">Selecione uma categoria e explore nossas criações artesanais</p>
+            </div>
+            <div class="categorias-grid">
+                @for (cat of categoriasFixas; track cat.id) {
+                <button class="categoria-card" [class.ativo]="categoriaSelecionadaId === cat.id"
+                    (click)="selecionarCategoria(cat.id)" (keydown.enter)="selecionarCategoria(cat.id)">
+                    <span class="categoria-icone-wrap">
+                        <img [src]="categoriaSelecionadaId === cat.id ? cat.imgBranca : cat.imgRosa" [alt]="cat.nome"
+                            class="categoria-img">
+                    </span>
+                    <span class="categoria-nome">{{ cat.nome }}</span>
+                </button>
+                }
+            </div>
+        </div>
+    </section>
+
+    <div class="divisor-onda divisor-invertido">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C240,0 480,80 720,40 C960,0 1200,80 1440,40 L1440,0 L0,0 Z" fill="#FAE9EB" />
+        </svg>
+    </div>
+
+    <section class="destaques-section">
+        <div class="container">
+            <div class="secao-cabecalho">
+                <span class="tag-rosa">Favoritos</span>
+                <h2 class="secao-titulo">Destaques da confeitaria</h2>
+                <p class="secao-subtitulo">Os mais pedidos pelos nossos clientes</p>
+            </div>
+
+            @if (carregando) {
+            <div class="loading-grid">
+                @for (i of [1,2,3,4]; track i) {
+                <div class="skeleton-card"></div>
+                }
+            </div>
+            } @else if (destaques.length === 0) {
+            <div class="vazio">
+                <p>Nenhum produto em destaque no momento.</p>
+                <a routerLink="/produtos" class="btn-primario">Ver todos os produtos</a>
+            </div>
+            } @else {
+            <div class="produtos-grid">
+                @for (produto of destaques; track produto.id) {
+                <app-card-produto [produto]="produto"></app-card-produto>
+                }
+            </div>
+            <div class="ver-todos-wrap">
+                <a routerLink="/produtos" class="btn-secundario">Ver todos os produtos</a>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-fundo">
+        </div>
+        <div class="cta-overlay"></div>
+        <div class="container cta-conteudo">
+            <h2 class="cta-titulo">Pronto para adoçar seu evento?</h2>
+            <p class="cta-subtitulo">Entre em contato e faça seu pedido personalizado diretamente com Adriana</p>
+            <a [href]="whatsapp" target="_blank" rel="noopener noreferrer" class="btn-wpp btn-wpp-grande">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                    <path
+                        d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.882a.5.5 0 0 0 .611.637l6.156-1.611A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.66-.516-5.175-1.415l-.371-.22-3.851 1.009 1.025-3.74-.241-.383A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                </svg>
+                Falar pelo WhatsApp
+            </a>
+        </div>
+    </section>
+</main>

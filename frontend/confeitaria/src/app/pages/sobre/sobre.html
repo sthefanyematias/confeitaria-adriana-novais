@@ -1,0 +1,119 @@
+<main class="sobre-page">
+
+    <section class="sobre-hero">
+        <div class="sobre-hero-fundo">
+        </div>
+        <div class="sobre-hero-overlay"></div>
+        <div class="container sobre-hero-conteudo">
+            <span class="tag-rosa">A confeiteira</span>
+            <div class="hero-card-texto">
+                <h1 class="sobre-hero-titulo">Conheça Adriana Novais</h1>
+                <p class="sobre-hero-sub">Uma historia feita de forno quente, criatividade e muito amor pelo que faz</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="sobre-historia">
+        <div class="container sobre-historia-inner">
+
+            <div class="sobre-foto">
+                <div class="foto-frame">
+                    <img src="images/foto1.jpg" alt="Adriana Novais confeiteira">
+                </div>
+                <div class="foto-detalhe"></div>
+            </div>
+
+            <div class="sobre-texto">
+                <span class="tag-rosa">Nossa historia</span>
+                <h2 class="sobre-secao-titulo">Da cozinha para os corações</h2>
+                <div class="sobre-bio">
+                    <p>
+                        Adriana Novais descobriu sua paixão pela confeitaria ainda na infância, ao acompanhar sua tia
+                        preparando bolos caseiros para os tradicionais cafés da tarde em família. Encantada pelo
+                        cuidado,
+                        pelos aromas e pela alegria que os doces proporcionavam, começou a reproduzir essas receitas em
+                        casa, criando bolos para familiares e amigos e transformando uma simples admiração em uma paixão
+                        que cresceria ao longo dos anos.
+                    </p>
+
+                    <p>
+                        Em 1996, aos 14 anos, participou da produção de seu primeiro bolo para o casamento de uma amiga,
+                        experiência que marcou definitivamente sua trajetória. Com o passar do tempo, passou a auxiliar
+                        na
+                        confecção de bolos festivos e a produzir encomendas para familiares, recebendo constantes
+                        elogios
+                        e incentivos para se profissionalizar. Em 2015, decidiu investir em sua formação, realizando
+                        cursos
+                        especializados em confeitaria e aperfeiçoando continuamente suas técnicas.
+                    </p>
+
+                    <p>
+                        Hoje, à frente da Adriana Novais Confeitaria, dedica-se à produção de bolos e doces elaborados
+                        com
+                        qualidade, carinho e atenção aos detalhes. Seu propósito é transformar celebrações e momentos
+                        especiais em lembranças afetivas através de sabores marcantes e apresentações impecáveis,
+                        oferecendo produtos que unem tradição, excelência e dedicação em cada criação.
+                    </p>
+                </div>
+                <div class="sobre-contato">
+                    <a [href]="whatsapp" target="_blank" rel="noopener noreferrer" class="btn-primario">
+                        Fazer um pedido
+                    </a>
+                    <a [href]="instagram" target="_blank" rel="noopener noreferrer" class="btn-secundario">
+                        Ver no Instagram
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="divisor-onda">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"
+                fill="var(--rosa-muito-claro)" />
+        </svg>
+    </div>
+
+    <section class="sobre-valores">
+        <div class="container">
+            <div class="secao-cabecalho">
+                <span class="tag-rosa">Nossos pilares</span>
+                <h2 class="secao-titulo">O que nos move</h2>
+                <p class="secao-subtitulo">Os valores que guiam cada criação da confeitaria</p>
+            </div>
+            <div class="valores-grid">
+                @for (valor of valores; track valor.titulo) {
+                <div class="valor-card glass-rosa">
+                    <span class="valor-icone">{{ valor.icone }}</span>
+                    <h3 class="valor-titulo">{{ valor.titulo }}</h3>
+                    <p class="valor-descricao">{{ valor.descricao }}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <div class="divisor-onda divisor-volta">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C240,0 480,80 720,40 C960,0 1200,80 1440,40 L1440,0 L0,0 Z" fill="var(--rosa-muito-claro)" />
+        </svg>
+    </div>
+
+    <section class="sobre-galeria">
+        <div class="container">
+            <div class="secao-cabecalho">
+                <span class="tag-rosa">Galeria</span>
+                <h2 class="secao-titulo">Nossos trabalhos</h2>
+            </div>
+            <div class="galeria-grid">
+                <div class="galeria-item galeria-grande"><img src="images/doce1.webp" alt="Trabalho 1" loading="lazy">
+                </div>
+                <div class="galeria-item"><img src="images/bolo2.webp" alt="Trabalho 2" loading="lazy"></div>
+                <div class="galeria-item"><img src="images/bolo3.webp" alt="Trabalho 3" loading="lazy"></div>
+                <div class="galeria-item"><img src="images/bolo4.webp" alt="Trabalho 4" loading="lazy"></div>
+                <div class="galeria-item"><img src="images/bolo1.webp" alt="Trabalho 5" loading="lazy"></div>
+            </div>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,75 @@
+<main class="produtos-page">
+
+    <section class="produtos-header">
+        <div class="container">
+            <span class="tag-rosa">Cardapio</span>
+            <h1 class="secao-titulo">Nossos Produtos</h1>
+            <p class="secao-subtitulo">Feitos artesanalmente com ingredientes de primeira qualidade</p>
+        </div>
+    </section>
+
+    <section class="filtros-section">
+        <div class="container">
+            <div class="filtros-wrap">
+                <button class="filtro-chip" [class.ativo]="categoriaAtiva === null" (click)="selecionarCategoria(null)"
+                    (keydown.enter)="selecionarCategoria(null)">
+                    Todos
+                </button>
+                @for (cat of categorias; track cat.id) {
+                <button class="filtro-chip" [class.ativo]="categoriaAtiva === cat.id"
+                    (click)="selecionarCategoria(cat.id!)" (keydown.enter)="selecionarCategoria(cat.id!)">
+                    {{ cat.nome }}
+                </button>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="produtos-lista">
+        <div class="container">
+
+            @if (categoriaAtiva) {
+            <p class="filtro-ativo-label">
+                Exibindo: <strong>{{ nomeCategoriaAtiva() }}</strong>
+                <button class="btn-limpar-filtro" (click)="selecionarCategoria(null)"
+                    (keydown.enter)="selecionarCategoria(null)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                    Limpar filtro
+                </button>
+            </p>
+            }
+
+            @if (carregando) {
+            <div class="grid-produtos">
+                @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                <div class="skeleton-card"></div>
+                }
+            </div>
+            } @else if (exibidos.length === 0) {
+            <div class="vazio">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--rosa-claro)"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <p>Nenhum produto encontrado nesta categoria.</p>
+                <button class="btn-primario" (click)="selecionarCategoria(null)"
+                    (keydown.enter)="selecionarCategoria(null)">
+                    Ver todos
+                </button>
+            </div>
+            } @else {
+            <div class="grid-produtos">
+                @for (produto of exibidos; track produto.id) {
+                <app-card-produto [produto]="produto"></app-card-produto>
+                }
+            </div>
+            }
+        </div>
+    </section>
+
+</main>

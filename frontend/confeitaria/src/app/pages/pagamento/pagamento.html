@@ -1,0 +1,160 @@
+<main class="pagamento-page">
+    <div class="container">
+
+        <div class="pagamento-header">
+            <h1 class="secao-titulo">Finalizar Pedido</h1>
+            <p class="secao-subtitulo">Preencha seus dados e escolha a forma de pagamento</p>
+        </div>
+
+        <div class="pagamento-layout">
+
+            <div class="pagamento-form-area">
+
+                <section class="pagamento-secao glass">
+                    <h2 class="pagamento-secao-titulo">
+                        <span class="step-num">1</span>
+                        Seus dados
+                    </h2>
+
+                    <form [formGroup]="form" class="form-dados">
+
+                        <div class="campo-grupo">
+                            <label class="campo-label" for="nome">Nome completo</label>
+                            <input id="nome" type="text" class="campo-input" [class.invalido]="campoInvalido('nome')"
+                                formControlName="nome" placeholder="Seu nome" autocomplete="name">
+                            @if (campoInvalido('nome')) {
+                            <span class="campo-erro">Insira seu nome completo (apenas letras, mínimo 3
+                                caracteres)</span>
+                            }
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label class="campo-label" for="email">E-mail</label>
+                            <input id="email" type="email" class="campo-input" [class.invalido]="campoInvalido('email')"
+                                formControlName="email" placeholder="seu@email.com" autocomplete="email">
+                            @if (campoInvalido('email')) {
+                            <span class="campo-erro">Insira um e-mail válido</span>
+                            }
+                        </div>
+
+                        <!-- <div class="campo-grupo">
+                            <label class="campo-label" for="telefone">WhatsApp / Telefone</label>
+                            <input id="telefone" type="tel" class="campo-input"
+                                [class.invalido]="campoInvalido('telefone')" formControlName="telefone"
+                                placeholder="(00) 90000-0000" autocomplete="tel">
+                            @if (campoInvalido('telefone')) {
+                            <span class="campo-erro">Insira um telefone válido com DDD</span>
+                            }
+                        </div> -->
+
+                        <div class="campo-grupo">
+                            <label class="campo-label" for="observacao">Observações (opcional)</label>
+                            <textarea id="observacao" class="campo-input campo-textarea" formControlName="observacao"
+                                placeholder="Alguma observação sobre o pedido? Ex: data de entrega desejada, personalização..."
+                                rows="3"></textarea>
+                        </div>
+
+                    </form>
+                </section>
+
+                <section class="pagamento-secao glass">
+                    <h2 class="pagamento-secao-titulo">
+                        <span class="step-num">2</span>
+                        Forma de pagamento
+                    </h2>
+
+                    <div class="formas-grid">
+                        @for (forma of formas; track forma.valor) {
+                        <button class="forma-card" [class.selecionada]="formaPagamento === forma.valor"
+                            (click)="selecionarForma(forma.valor)" (keydown.enter)="selecionarForma(forma.valor)"
+                            [attr.aria-pressed]="formaPagamento === forma.valor">
+                            <div class="forma-icone" [style.background]="forma.cor + '22'" [style.color]="forma.cor">
+                                @if (forma.valor === 'pix') {
+                                <div class="pix-imagem-wrap">
+                                    <img src="/images/pix.png" alt="PIX" class="pix-logo"
+                                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                    <span class="pix-texto-fallback"
+                                        style="display:none; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">PIX</span>
+                                </div>
+                                } @else if (forma.valor === 'cartao_debito') {
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                </svg>
+                                } @else {
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                    <path d="M7 15h.01M11 15h2" />
+                                </svg>
+                                }
+                            </div>
+                            <div class="forma-info">
+                                <span class="forma-rotulo">{{ forma.rotulo }}</span>
+                                <span class="forma-descricao">{{ forma.descricao }}</span>
+                            </div>
+                            @if (formaPagamento === forma.valor) {
+                            <div class="forma-check">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
+                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            </div>
+                            }
+                        </button>
+                        }
+                    </div>
+                </section>
+
+                <button class="btn-whatsapp" (click)="finalizarPedido()" (keydown.enter)="finalizarPedido()"
+                    [disabled]="enviando">
+                    @if (enviando) {
+                    <div class="spinner"></div>
+                    Processando...
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.882a.5.5 0 0 0 .611.637l6.156-1.611A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.66-.516-5.175-1.415l-.371-.22-3.851 1.009 1.025-3.74-.241-.383A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                    </svg>
+                    Finalizar pelo WhatsApp
+                    }
+                </button>
+
+            </div>
+
+            <aside class="pagamento-resumo glass">
+                <h3 class="resumo-titulo">Resumo</h3>
+                <div class="resumo-itens">
+                    @for (item of itens; track item.produto_id) {
+                    <div class="resumo-item">
+                        <img [src]="item.imagem_url || '/images/produto-placeholder.png'" [alt]="item.nome">
+                        <div class="resumo-item-info">
+                            <span class="resumo-item-nome">{{ item.nome }}</span>
+                            <span class="resumo-item-qtd">x{{ item.quantidade }}</span>
+                        </div>
+                        <span class="resumo-item-preco">{{ formatarPreco(item.subtotal) }}</span>
+                    </div>
+                    }
+                </div>
+                <div class="resumo-divider"></div>
+                <div class="resumo-total">
+                    <span>Total</span>
+                    <span class="total-valor">{{ formatarPreco(total) }}</span>
+                </div>
+                <a routerLink="/carrinho" class="btn-ghost btn-editar-carrinho">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Editar carrinho
+                </a>
+            </aside>
+
+        </div>
+    </div>
+</main>

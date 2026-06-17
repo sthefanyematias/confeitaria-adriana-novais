@@ -1,0 +1,898 @@
+
+openapi: 3.0.3
+info:
+  title: Confeitaria Adriana Novais — API
+  description: |
+    API REST da confeitaria. Autenticação via **JWT** (Bearer token ou header `x-access-token`).  
+    Rotas públicas: `POST /admin/login`, `GET /categorias/**`, `GET /produtos/**`, `POST /cliente`, `POST /pedido`.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+tags:
+  - name: Auth
+    description: Autenticação de administradores
+  - name: Admin
+    description: Gestão de usuários administradores
+  - name: Categorias
+    description: Gestão de categorias de produtos
+  - name: Produtos
+    description: Gestão de produtos (upload de imagem via multipart/form-data)
+  - name: Clientes
+    description: Gestão de clientes
+  - name: Pedidos
+    description: Gestão de pedidos
+
+security:
+  - bearerAuth: []
+  - xAccessToken: []
+
+# ──────────────────────────────────────────────────────────────────────────────
+paths:
+
+  # ── AUTH ──────────────────────────────────────────────────────────────────
+  /admin/login:
+    post:
+      tags: [Auth]
+      summary: Login do administrador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: adriana@novais.com
+              senha: "1234"
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+
+  # ── ADMIN ─────────────────────────────────────────────────────────────────
+  /admin:
+    post:
+      tags: [Admin]
+      summary: Cadastrar administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUsuarioInput'
+      responses:
+        '200':
+          description: Admin inserido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoId'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Admin]
+      summary: Listar administradores
+      responses:
+        '200':
+          description: Lista de admins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminUsuario'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /admin/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Admin]
+      summary: Buscar administrador por ID
+      responses:
+        '200':
+          description: Admin encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUsuario'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    put:
+      tags: [Admin]
+      summary: Editar administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUsuarioInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      tags: [Admin]
+      summary: Deletar administrador
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ── CATEGORIAS ────────────────────────────────────────────────────────────
+  /categorias:
+    post:
+      tags: [Categorias]
+      summary: Cadastrar categoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaInput'
+      responses:
+        '200':
+          description: Categoria inserida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoId'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Categorias]
+      summary: Listar categorias
+      security: []
+      parameters:
+        - name: ativo
+          in: query
+          schema:
+            type: boolean
+          description: Filtrar por status ativo/inativo
+      responses:
+        '200':
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /categorias/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Categorias]
+      summary: Buscar categoria por ID
+      security: []
+      responses:
+        '200':
+          description: Categoria encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    put:
+      tags: [Categorias]
+      summary: Editar categoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      tags: [Categorias]
+      summary: Deletar categoria
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ── PRODUTOS ──────────────────────────────────────────────────────────────
+  /produtos:
+    post:
+      tags: [Produtos]
+      summary: Cadastrar produto (com upload de imagem)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProdutoFormData'
+      responses:
+        '200':
+          description: Produto inserido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoId'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Produtos]
+      summary: Listar produtos
+      security: []
+      parameters:
+        - name: ativo
+          in: query
+          schema:
+            type: boolean
+        - name: destaque
+          in: query
+          schema:
+            type: boolean
+        - name: categoria_id
+          in: query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /produtos/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Produtos]
+      summary: Buscar produto por ID
+      security: []
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    put:
+      tags: [Produtos]
+      summary: Editar produto (com upload de imagem)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ProdutoFormData'
+                - type: object
+                  properties:
+                    imagem_url:
+                      type: string
+                      description: URL da imagem existente (mantém se não enviar nova imagem)
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      tags: [Produtos]
+      summary: Deletar produto
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ── CLIENTES ──────────────────────────────────────────────────────────────
+  /cliente:
+    post:
+      tags: [Clientes]
+      summary: Cadastrar cliente
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteInput'
+      responses:
+        '200':
+          description: Cliente inserido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoId'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Clientes]
+      summary: Listar clientes
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /cliente/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Clientes]
+      summary: Buscar cliente por ID
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    put:
+      tags: [Clientes]
+      summary: Editar cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      tags: [Clientes]
+      summary: Deletar cliente
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ── PEDIDOS ───────────────────────────────────────────────────────────────
+  /pedido:
+    post:
+      tags: [Pedidos]
+      summary: Criar pedido
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoRequest'
+      responses:
+        '200':
+          description: Pedido criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoId'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Pedidos]
+      summary: Listar pedidos
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /pedido/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Pedidos]
+      summary: Buscar pedido por ID (inclui itens)
+      responses:
+        '200':
+          description: Pedido encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    put:
+      tags: [Pedidos]
+      summary: Editar pedido (substitui itens)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      tags: [Pedidos]
+      summary: Deletar pedido
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /pedido/{id}/status:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    patch:
+      tags: [Pedidos]
+      summary: Atualizar status do pedido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/StatusPedido'
+            example:
+              status: em_preparo
+      responses:
+        '200':
+          $ref: '#/components/responses/Mensagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+# ──────────────────────────────────────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT obtido via `POST /admin/login`
+    xAccessToken:
+      type: apiKey
+      in: header
+      name: x-access-token
+      description: Alternativa ao Bearer — enviar o JWT diretamente no header `x-access-token`
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+  responses:
+    Mensagem:
+      description: Operação realizada com sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Mensagem'
+    NotFound:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Mensagem'
+    BadRequest:
+      description: Erro de validação ou negócio
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+
+  schemas:
+
+    # ── Auxiliares ────────────────────────────────────────────────────────
+    Mensagem:
+      type: object
+      properties:
+        mensagem:
+          type: string
+
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: string
+
+    NovoId:
+      type: object
+      properties:
+        mensagem:
+          type: string
+        novo_id:
+          type: integer
+          format: int64
+
+    # ── Enums ─────────────────────────────────────────────────────────────
+    FormaPagamento:
+      type: string
+      enum: [pix, cartao_credito, cartao_debito]
+
+    StatusPedido:
+      type: string
+      enum: [pendente, confirmado, em_preparo, pronto, entregue, cancelado]
+
+    # ── Auth ──────────────────────────────────────────────────────────────
+    LoginRequest:
+      type: object
+      required: [email, senha]
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT com validade de 24 h
+        admin:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            nome:
+              type: string
+            email:
+              type: string
+            ativo:
+              type: boolean
+
+    # ── Admin ─────────────────────────────────────────────────────────────
+    AdminUsuarioInput:
+      type: object
+      required: [nome, email, senha]
+      properties:
+        nome:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        senha:
+          type: string
+          description: Armazenada como MD5
+        ativo:
+          type: boolean
+          default: true
+
+    AdminUsuario:
+      allOf:
+        - $ref: '#/components/schemas/AdminUsuarioInput'
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            cadastro:
+              type: string
+              format: date-time
+          description: O campo `senha` é ocultado nas respostas (JsonIgnore)
+
+    # ── Categoria ─────────────────────────────────────────────────────────
+    CategoriaInput:
+      type: object
+      required: [nome]
+      properties:
+        nome:
+          type: string
+          maxLength: 100
+        descricao:
+          type: string
+          maxLength: 255
+        ativo:
+          type: boolean
+          default: true
+
+    Categoria:
+      allOf:
+        - $ref: '#/components/schemas/CategoriaInput'
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            cadastro:
+              type: string
+              format: date-time
+
+    # ── Produto ───────────────────────────────────────────────────────────
+    ProdutoFormData:
+      type: object
+      required: [categoria_id, nome, preco, estoque]
+      properties:
+        categoria_id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+          maxLength: 150
+        descricao:
+          type: string
+          maxLength: 255
+        preco:
+          type: number
+          format: decimal
+        estoque:
+          type: integer
+          minimum: 0
+        destaque:
+          type: boolean
+          default: false
+        ativo:
+          type: boolean
+          default: true
+        unidade_tipo:
+          type: string
+          maxLength: 20
+          example: unidade
+        unidade_quantidade:
+          type: integer
+        imagem:
+          type: string
+          format: binary
+          description: Arquivo de imagem (max 5 MB). A URL pública ficará em `/images/{nome-arquivo}`
+
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        categoria:
+          $ref: '#/components/schemas/Categoria'
+        categoria_id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: decimal
+        estoque:
+          type: integer
+        imagem_url:
+          type: string
+          description: Nome do arquivo — acesse via `/images/{imagem_url}`
+        destaque:
+          type: boolean
+        ativo:
+          type: boolean
+        unidade_tipo:
+          type: string
+        unidade_quantidade:
+          type: integer
+        cadastro:
+          type: string
+          format: date-time
+
+    # ── Cliente ───────────────────────────────────────────────────────────
+    ClienteInput:
+      type: object
+      required: [nome, email]
+      properties:
+        nome:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 150
+        telefone:
+          type: string
+          maxLength: 20
+        ativo:
+          type: boolean
+          default: true
+
+    Cliente:
+      allOf:
+        - $ref: '#/components/schemas/ClienteInput'
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            cadastro:
+              type: string
+              format: date-time
+
+    # ── Pedido ────────────────────────────────────────────────────────────
+    ItemPedidoRequest:
+      type: object
+      required: [produto_id, quantidade, valor_unitario]
+      properties:
+        produto_id:
+          type: integer
+          format: int64
+        quantidade:
+          type: integer
+          minimum: 1
+        valor_unitario:
+          type: number
+          format: decimal
+          minimum: 0
+
+    PedidoRequest:
+      type: object
+      required: [cliente_id, forma_pagamento, itens]
+      properties:
+        cliente_id:
+          type: integer
+          format: int64
+        data_entrega:
+          type: string
+          format: date-time
+        forma_pagamento:
+          $ref: '#/components/schemas/FormaPagamento'
+        status:
+          $ref: '#/components/schemas/StatusPedido'
+        observacao:
+          type: string
+          maxLength: 255
+        itens:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ItemPedidoRequest'
+
+    ItemPedido:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        produto_id:
+          type: integer
+          format: int64
+        produto:
+          $ref: '#/components/schemas/Produto'
+        quantidade:
+          type: integer
+        valor_unitario:
+          type: number
+          format: decimal
+        subtotal:
+          type: number
+          format: decimal
+
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        cliente:
+          $ref: '#/components/schemas/Cliente'
+        cliente_id:
+          type: integer
+          format: int64
+        data_pedido:
+          type: string
+          format: date-time
+        data_entrega:
+          type: string
+          format: date-time
+        valor_total:
+          type: number
+          format: decimal
+        forma_pagamento:
+          $ref: '#/components/schemas/FormaPagamento'
+        status:
+          $ref: '#/components/schemas/StatusPedido'
+        observacao:
+          type: string
+        cadastro:
+          type: string
+          format: date-time
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
